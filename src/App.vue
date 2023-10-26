@@ -1,49 +1,34 @@
 <template>
   <div>
-    Счетчик  {{count}}
+    <h3>Динамичекие компоненты</h3>
   </div>
-  <button @click="count++"> inc</button>
-  <div class="postsForm">
-    <input class="input" type="text" v-model="inputValue" @input="inputText"  @keyup.shift.enter="addToList"/>
-    <div id="inputText"></div>
-    <button class="submit" @click="addToList">Add post</button>
-    <ul class="postList"> 
-      <li class="postItem" v-for="(post, idx) in list" :key="post.key">
-        <div class="title">[{{ idx }}] {{ post.title }}</div>
-        <input type="text" @click.stop ref="postInput"/>
-        <button class="delete" @click="deletePost(idx)">Delete</button>
-      </li>
-    </ul>
-  </div>
+  <Button @action="component='first'">Первый пост(ввод)</Button>
+  <Button @action="component='second'">Второй пост(выбор anim)</Button>
+  <Button @action="component='third'">Третий пост</Button>
+  <KeepAlive>
+  <component :is="setComp">
+  </component>
+  </KeepAlive>
 </template>
 
 
 <script>
+import Button from './components/Button.vue'
+import PostsFirst from './posts/PostsFirst.vue'
+import PostsSecond from './posts/PostsSecond.vue'
+import PostsThird from './posts/PostsThird.vue'
 export default {
-  data(){   
-    return{ 
-      count: 0,
-      list: [],
-      inputValue: ""
+  data(){
+    return{
+    component:"first"
     }
   },
-  methods: {
-      inc(){this.count++},
-      addToList(){
-        console.log(this.inputValue);
-        this.list.push({title: this.inputValue,key:new Date().toJSON()})
-        this.inputValue = ""
-      },
-      inputText(event){
-        console.log(event.target.value)
-        document.getElementById("inputText").innerHTML = event.target.value;
-      },
-      deletePost(idx){
-        console.log(idx, 1)
-        this.list.splice(idx, 1)
-      }
-  }
-  
+  computed:{
+    setComp(){
+      return "posts-" + this.component
+    }
+  },
+components:{Button, PostsFirst, PostsSecond, PostsThird}
 }
 </script>
 
